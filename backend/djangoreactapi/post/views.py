@@ -1,5 +1,5 @@
 #backend/post/views.py
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import generics
 
 from .models import Post
@@ -18,3 +18,8 @@ class DetailPost(generics.RetrieveUpdateDestroyAPIView):
 
 def home(request):
     return render(request, 'app/home.html')
+
+
+def auth(request):
+    
+    return redirect('home')

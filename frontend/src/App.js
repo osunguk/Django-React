@@ -6,15 +6,13 @@ class App extends Component {
     };
 
     async componentDidMount() {
-        try {
-            const res = await fetch('http://127.0.0.1:8000/api/');
-            const posts = await res.json();
-            this.setState({
-                posts
-            });
-        } catch (e) {
-            console.log(e);
-        }
+        fetch('http://127.0.0.1:8000/api/')
+        .then(res => res.json())
+        .then(json =>{
+          this.setState({
+            posts : json
+          })
+        })
     }
 
     render() {

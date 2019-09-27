@@ -52,6 +52,9 @@ REST_FRAMEWORK = {
     ]
 }
 
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # 추가
     'django.middleware.common.CommonMiddleware',  # 추가

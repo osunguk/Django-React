@@ -8,5 +8,5 @@ urlpatterns = [
     path('api/', include('post.urls')),
     path('', post.views.home, name='home'),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    path('outh/', post.views.),
+    path('auth/', post.views.auth, name='auth'),
 ]

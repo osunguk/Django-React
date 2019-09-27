@@ -5,6 +5,7 @@ from rest_framework import generics
 from .models import Post
 from .serializers import PostSerializer
 import requests
+from django.contrib.auth.models import User
 
 class ListPost(generics.ListCreateAPIView):
     queryset = Post.objects.all()
@@ -43,6 +44,10 @@ def auth(request):
     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
     print(response2_json)
 
+    u = User(username=str(response2_json['properties']['nickname'])+str('#'+response2_json['id']))
+    u.set_password('')
+    u.is_staff=False
+    u.save()
 
 
     return redirect('http://localhost:3000/')

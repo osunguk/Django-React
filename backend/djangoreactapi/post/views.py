@@ -1,11 +1,13 @@
 #backend/post/views.py
 from django.shortcuts import render, redirect
 from rest_framework import generics
-
 from .models import Post
 from .serializers import PostSerializer
 import requests
 from django.contrib.auth.models import User
+from .models import Profile, models
+from . import serializers
+from django.utils import timezone
 
 class ListPost(generics.ListCreateAPIView):
     queryset = Post.objects.all()
@@ -15,6 +17,15 @@ class ListPost(generics.ListCreateAPIView):
 class DetailPost(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+
+class UserListView(generics.ListAPIView):
+    permission_classes = ()
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 def home(request):
@@ -44,10 +55,15 @@ def auth(request):
     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
     print(response2_json)
 
-    u = User(username=str(response2_json['properties']['nickname'])+str('#'+response2_json['id']))
-    u.set_password('')
-    u.is_staff=False
-    u.save()
-
+    username = str(response2_json['properties']['nickname'])+'#'+str(response2_json['id'])
+    if (User.objects.filter(username=username).exists() == False):
+        u = User.objects.create_user(
+            username=username,
+            password='',
+            last_login=timezone.localtime(),
+            is_staff=False,
+        )
+        profile = Profile(user=u, type='kakao', image=response2_json['properties']['profile_image'])
+        profile.save()
 
     return redirect('http://localhost:3000/')

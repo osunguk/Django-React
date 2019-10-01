@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
+import { Link, Route, BrowserRouter as Router } from "react-router-dom";
+import test from './test'
+import auth from './auth'
 
-
-const style = {
-  image: {
-    border: '1px solid #ccc',
-    background: '#fefefe',
-  },
-};
 
 class App extends Component {
   state = {
@@ -15,7 +11,6 @@ class App extends Component {
   };
 
   componentDidMount() {
-    console.log('a')
     fetch('http://127.0.0.1:8000/api/users/')
       .then(res => res.json())
       .then(json => {
@@ -24,8 +19,6 @@ class App extends Component {
           users: json
         })
       })
-
-    console.log('b')
     fetch('http://127.0.0.1:8000/api/')
       .then(res => res.json())
       .then(
@@ -33,7 +26,12 @@ class App extends Component {
           posts: json
         })
       )
-    console.log('c')
+  }
+
+  handle_KakaoLogout(){
+    var host = 'http://127.0.0.1:8000/logout/'
+
+
   }
 
   handle_KakaoLogin() {
@@ -47,7 +45,7 @@ class App extends Component {
       .then(
         res => {
           console.log('res', res)
-          window.open(res.url)
+          window.open(res.url, '카카오 로그인', 'width=570, height=490, top=250, left=500')
         })
     // .then(
     //   json => console.log('json',json)
@@ -57,22 +55,30 @@ class App extends Component {
   render() {
     return (
       <div>
+        <Router>
+        <header>
+          <Link to='/test'>
+            <button>test</button>
+          </Link>
+          
+        </header>
+        <hr />
+        <main>
+          <switch>
+            <Route path='/test' component={test} />
+            <Route path='/auth' component={auth} />
+          </switch>
+        </main>
+      </Router>
         <div id='카카오 로그인'>
           <h3>카카오 로그인</h3>
           <button onClick={this.handle_KakaoLogin}>로그인</button>
+          <button onClick={this.handle_KakaoLogout}>로그아웃</button>
         </div>
         {this.state.users.map(item => (
           <div key={item.id}>
-            <h1>{item.username}</h1>
+            <h1>{item.username}님 반갑습니다!</h1>
             <p>{item.email}</p>
-            <img
-              src={item.image}
-              alt='No img'
-              height={240}
-              width={240}
-              style={style.image
-              }
-            />
           </div>
         ))}
         {this.state.posts.map(item => (

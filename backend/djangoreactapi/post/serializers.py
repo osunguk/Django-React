@@ -1,7 +1,8 @@
 #backend/post/serializers.py
 from rest_framework import serializers
-from .models import Post
+from .models import Post, Profile
 from . import models
+
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,7 +15,27 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(use_url=True, required=False)
     class Meta:
         model = models.User
-        fields = ('id', 'email', 'username', 'image')
+        fields = (
+            'id',
+            'username',
+            'email',
+            )
+
+
+class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.HyperlinkedRelatedField(view_name='test', read_only=True)
+    user = UserSerializer()
+    class Meta:
+        model = Profile
+        fields = (
+            'id',
+            'type',
+            'image',
+            'memo',
+            'user',
+            )
+
+
+
